@@ -1,0 +1,2 @@
+torch>=1.12.1
+lightning>=1.9.0
