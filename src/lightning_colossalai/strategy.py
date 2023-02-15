@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, List, Mapping, Optional, 
 
 import lightning.pytorch as pl
 import torch
-from lightning_colossalai.precision import ColossalAIPrecisionPlugin
 from lightning.fabric.accelerators.cuda import _patch_cuda_is_available
 from lightning.fabric.plugins.environments.cluster_environment import ClusterEnvironment
 from lightning.fabric.utilities.distributed import ReduceOp
@@ -33,6 +32,8 @@ from lightning_utilities.core.imports import RequirementCache
 from torch import Tensor
 from torch.nn import Module
 from torch.optim.optimizer import Optimizer
+
+from lightning_colossalai.precision import ColossalAIPrecisionPlugin
 
 _COLOSSALAI_AVAILABLE = RequirementCache("colossalai")
 if TYPE_CHECKING and _COLOSSALAI_AVAILABLE:
