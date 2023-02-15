@@ -7,7 +7,6 @@ ______________________________________________________________________
 [![CI testing](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-testing.yml/badge.svg?event=push)](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-testing.yml)
 [![General checks](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-checks.yml/badge.svg?event=push)](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-checks.yml)
 
-
 ## Installation
 
 ```commandline
@@ -17,6 +16,7 @@ pip install -U lightning lightning-colossalai
 ## Usage
 
 Simply set the strategy arugment in the Trainer:
+
 ```py
 import lightning as L
 
