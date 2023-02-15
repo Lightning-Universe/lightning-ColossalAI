@@ -13,8 +13,8 @@
 # limitations under the License.
 from typing import Any, Callable, Literal, Optional, Union, cast
 
-import lightning.pytorch as pl
 from lightning.fabric.utilities.types import Steppable
+from lightning.pytorch import LightningModule
 from lightning.pytorch.plugins.precision.precision_plugin import PrecisionPlugin
 from torch import Tensor
 from torch.optim import Optimizer
@@ -42,7 +42,7 @@ class ColossalAIPrecisionPlugin(PrecisionPlugin):
     def backward(  # type: ignore[override]
         self,
         tensor: Tensor,
-        model: "pl.LightningModule",
+        model: LightningModule,
         optimizer: Optional[Steppable],
         *args: Any,
         **kwargs: Any,
@@ -59,14 +59,14 @@ class ColossalAIPrecisionPlugin(PrecisionPlugin):
     def optimizer_step(  # type: ignore[override]
         self,
         optimizer: Steppable,
-        model: "pl.LightningModule",
+        model: LightningModule,
         closure: Callable[[], Any],
         **kwargs: Any,
     ) -> Any:
         closure_result = closure()
         self._after_closure(model, optimizer)
         skipped_backward = closure_result is None
-        if isinstance(model, pl.LightningModule) and model.automatic_optimization and skipped_backward:
+        if isinstance(model, LightningModule) and model.automatic_optimization and skipped_backward:
             raise ValueError(
                 "Skipping backward by returning `None` from your `training_step` is not supported by `ColossalAI`."
             )

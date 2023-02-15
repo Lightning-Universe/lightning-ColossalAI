@@ -14,11 +14,12 @@
 import math
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Mapping, Optional, OrderedDict, Union
 
-import lightning.pytorch as pl
 import torch
 from lightning.fabric.accelerators.cuda import _patch_cuda_is_available
 from lightning.fabric.plugins.environments.cluster_environment import ClusterEnvironment
 from lightning.fabric.utilities.distributed import ReduceOp
+from lightning.pytorch import LightningModule, Trainer
+from lightning.pytorch.accelerators import Accelerator
 from lightning.pytorch.accelerators.cuda import CUDAAccelerator
 from lightning.pytorch.overrides.base import _LightningModuleWrapperBase, _LightningPrecisionModuleWrapperBase
 from lightning.pytorch.plugins.io.checkpoint_plugin import CheckpointIO
@@ -138,7 +139,7 @@ class ColossalAIStrategy(DDPStrategy):
         growth_interval: int = 1000,
         hysteresis: int = 2,
         max_scale: float = 2**32,
-        accelerator: Optional["pl.accelerators.Accelerator"] = None,
+        accelerator: Optional[Accelerator] = None,
         parallel_devices: Optional[List[torch.device]] = None,
         cluster_environment: Optional[ClusterEnvironment] = None,
         checkpoint_io: Optional[CheckpointIO] = None,
@@ -259,7 +260,7 @@ class ColossalAIStrategy(DDPStrategy):
                     "`ColossalAIStrategy` only supports `colossalai.nn.optimizer.CPUAdam` "
                     "and `colossalai.nn.optimizer.HybridAdam` as its optimizer."
                 )
-        assert isinstance(self.model, (pl.LightningModule, _LightningPrecisionModuleWrapperBase))
+        assert isinstance(self.model, (LightningModule, _LightningPrecisionModuleWrapperBase))
         pl_module = self.model
 
         if not hasattr(pl_module, "_colossalai_zero"):
@@ -297,7 +298,7 @@ class ColossalAIStrategy(DDPStrategy):
                 ZeroOptimizer(optimizer, self.model, gpu_margin_mem_ratio=self.gpu_margin_mem_ratio, **self.amp_kwargs)
             ]
 
-    def setup(self, trainer: "pl.Trainer") -> None:
+    def setup(self, trainer: Trainer) -> None:
         precision = self.precision_plugin.precision
         if precision != "16":
             raise ValueError(
@@ -369,12 +370,12 @@ class ColossalAIStrategy(DDPStrategy):
         self,
         optimizer: Optimizer,
         closure: Callable[[], Any],
-        model: Optional[Union["pl.LightningModule", Module]] = None,
+        model: Union[LightningModule, Module, None] = None,
         **kwargs: Any,
     ) -> Any:
         model = model or self.lightning_module
         # TODO(fabric): remove assertion once strategy's optimizer_step typing is fixed
-        assert isinstance(model, pl.LightningModule)
+        assert isinstance(model, LightningModule)
         return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
 
     def lightning_module_state_dict(self, rank_zero_only: bool = False) -> Dict[str, Any]:
