@@ -21,11 +21,12 @@ from lightning.pytorch.demos.boring_classes import BoringModel
 from lightning.pytorch.strategies import ColossalAIStrategy
 from torch import Tensor
 
-from tests.helpers.datamodules import ClassifDataModule
+from tests.datamodules import ClassifDataModule
 from tests.test_strategy import ModelParallelBoringModel, ModelParallelClassificationModel
 
 
 def decorate(func, standalone: bool):
+    """Mock functions for parsing standalone test, but it does not do anything."""
     def wrap(*args, **kwargs):
         return func(*args, **kwargs)
 
