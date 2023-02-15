@@ -44,7 +44,7 @@ def test_invalid_colosalai(monkeypatch):
         ColossalAIStrategy()
 
 
-@RunIf(colossalai=True)
+
 def test_colossalai_strategy_with_trainer_by_instance():
     trainer = Trainer(precision=16, strategy=ColossalAIStrategy())
 
@@ -52,7 +52,7 @@ def test_colossalai_strategy_with_trainer_by_instance():
     assert isinstance(trainer.strategy.precision_plugin, ColossalAIPrecisionPlugin)
 
 
-@RunIf(colossalai=True)
+
 def test_colossalai_strategy_with_trainer_by_string():
     trainer = Trainer(precision=16, strategy="colossalai")
 
@@ -79,7 +79,7 @@ class ModelParallelBoringModelNoSchedulers(ModelParallelBoringModel):
         return HybridAdam(self.layer.parameters(), lr=1e-3)
 
 
-@RunIf(min_cuda_gpus=1, colossalai=True)
+@pytest.mark.skipif(torch.cuda.device_count() < 1, reason="This test needs at least single GPU.")
 def test_gradient_clip_algorithm_error(tmpdir):
     model = ModelParallelBoringModel()
     trainer = Trainer(
@@ -98,7 +98,7 @@ def test_gradient_clip_algorithm_error(tmpdir):
         trainer.fit(model)
 
 
-@RunIf(min_cuda_gpus=1, standalone=True, colossalai=True)
+@RunIf(min_cuda_gpus=1, standalone=True)
 def test_colossalai_optimizer(tmpdir):
     model = BoringModel()
     trainer = Trainer(
@@ -119,7 +119,7 @@ def test_colossalai_optimizer(tmpdir):
         trainer.fit(model)
 
 
-@RunIf(min_cuda_gpus=1, standalone=True, colossalai=True)
+@RunIf(min_cuda_gpus=1, standalone=True)
 def test_warn_colossalai_ignored(tmpdir):
     class TestModel(ModelParallelBoringModel):
         def backward(self, loss: Tensor, *args, **kwargs) -> None:
@@ -214,7 +214,7 @@ class ModelParallelClassificationModel(LightningModule):
         return self.forward(x)
 
 
-@RunIf(min_cuda_gpus=2, standalone=True, colossalai=True, sklearn=True)
+@RunIf(min_cuda_gpus=2, standalone=True, sklearn=True)
 def test_multi_gpu_checkpointing(tmpdir):
     dm = ClassifDataModule()
     model = ModelParallelClassificationModel()
@@ -238,7 +238,7 @@ def test_multi_gpu_checkpointing(tmpdir):
 
 
 @pytest.mark.xfail(raises=AssertionError, match="You should run a completed iteration as your warmup iter")
-@RunIf(min_cuda_gpus=2, standalone=True, colossalai=True, sklearn=True)
+@RunIf(min_cuda_gpus=2, standalone=True, sklearn=True)
 def test_test_without_fit(tmpdir):
     model = ModelParallelClassificationModel()
     dm = ClassifDataModule()
@@ -249,7 +249,7 @@ def test_test_without_fit(tmpdir):
     trainer.test(model, datamodule=dm)
 
 
-@RunIf(min_cuda_gpus=2, standalone=True, colossalai=True, sklearn=True)
+@RunIf(min_cuda_gpus=2, standalone=True, sklearn=True)
 def test_multi_gpu_model_colossalai_fit_test(tmpdir):
     seed_everything(7)
 
