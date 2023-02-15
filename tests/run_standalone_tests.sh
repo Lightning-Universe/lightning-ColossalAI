@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 set -e
-# THIS FILE ASSUMES IT IS RUN INSIDE THE tests/tests_<package> DIRECTORY
+# THIS FILE ASSUMES IT IS RUN INSIDE THE tests/ DIRECTORY
 
 # Batch size for testing: Determines how many standalone test invocations run in parallel
 # It can be set through the env variable PL_STANDALONE_TESTS_BATCH_SIZE and defaults to 6 if not set
@@ -36,8 +36,8 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
 else
   parametrizations=$(python -m pytest $files --collect-only --quiet "$@" | head -n -2)
 fi
-# remove the "tests/tests_pytorch/" path suffixes
-path_suffix=$(basename "$(dirname "$(pwd)")")/$(basename "$(pwd)")"/"  # https://stackoverflow.com/a/8223345
+# remove the "tests/" path suffixes
+path_suffix=$(basename "$(dirname "$(pwd)")")/  # https://stackoverflow.com/a/8223345
 parametrizations=${parametrizations//$path_suffix/}
 parametrizations_arr=($parametrizations)
 
