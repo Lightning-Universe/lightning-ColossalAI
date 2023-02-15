@@ -25,7 +25,7 @@ jobs:
     uses: Lightning-AI/utilities/.github/workflows/check-package.yml@main
     with:
       actions-ref: main
-      import-name: "colossalai"
+      import-name: "lightning_colossalai"
       artifact-name: dist-packages-${{ github.sha }}
       testing-matrix: |
         {

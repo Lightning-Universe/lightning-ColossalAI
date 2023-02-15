@@ -29,7 +29,7 @@ from tests.helpers.datamodules import ClassifDataModule
 from tests.helpers.runif import RunIf
 
 if _COLOSSALAI_AVAILABLE:
-    from colossalai.nn.optimizer import HybridAdam
+    from lightning_colossalai.nn.optimizer import HybridAdam
 
 
 def test_invalid_colosalai(monkeypatch):

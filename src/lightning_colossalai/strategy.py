@@ -16,13 +16,13 @@ from typing import TYPE_CHECKING, Any, Callable, Dict, List, Mapping, Optional, 
 
 import lightning.pytorch as pl
 import torch
+from lightning_colossalai.precision import ColossalAIPrecisionPlugin
 from lightning.fabric.accelerators.cuda import _patch_cuda_is_available
 from lightning.fabric.plugins.environments.cluster_environment import ClusterEnvironment
 from lightning.fabric.utilities.distributed import ReduceOp
 from lightning.pytorch.accelerators.cuda import CUDAAccelerator
 from lightning.pytorch.overrides.base import _LightningModuleWrapperBase, _LightningPrecisionModuleWrapperBase
 from lightning.pytorch.plugins.io.checkpoint_plugin import CheckpointIO
-from lightning.pytorch.plugins.precision import ColossalAIPrecisionPlugin
 from lightning.pytorch.strategies.ddp import DDPStrategy
 from lightning.pytorch.strategies.strategy import TBroadcast
 from lightning.pytorch.trainer.states import TrainerFn
@@ -37,7 +37,7 @@ from torch.optim.optimizer import Optimizer
 _COLOSSALAI_AVAILABLE = RequirementCache("colossalai")
 if TYPE_CHECKING and _COLOSSALAI_AVAILABLE:
     with _patch_cuda_is_available():
-        from colossalai.utils.model.colo_init_context import ColoInitContext
+        from lightning_colossalai.utils.model.colo_init_context import ColoInitContext
 else:
     ColoInitContext = Any
 
@@ -148,7 +148,7 @@ class ColossalAIStrategy(DDPStrategy):
                 "Download `colossalai` by consulting `https://colossalai.org/download`."
             )
         with _patch_cuda_is_available():
-            from colossalai.logging import get_dist_logger
+            from lightning_colossalai.logging import get_dist_logger
 
         super().__init__(
             accelerator=accelerator,
@@ -184,7 +184,7 @@ class ColossalAIStrategy(DDPStrategy):
     @property
     def root_device(self) -> torch.device:
         with _patch_cuda_is_available():
-            from colossalai.utils import get_current_device
+            from lightning_colossalai.utils import get_current_device
 
         if self.parallel_devices is not None:
             return self.parallel_devices[self.local_rank]
@@ -201,9 +201,9 @@ class ColossalAIStrategy(DDPStrategy):
 
     def setup_distributed(self) -> None:
         with _patch_cuda_is_available():
-            from colossalai.context import ParallelMode
-            from colossalai.core import global_context as gpc
-            from colossalai.logging import disable_existing_loggers
+            from lightning_colossalai.context import ParallelMode
+            from lightning_colossalai.core import global_context as gpc
+            from lightning_colossalai.logging import disable_existing_loggers
 
         assert self.cluster_environment is not None
         self.set_world_ranks()
@@ -225,7 +225,7 @@ class ColossalAIStrategy(DDPStrategy):
         Returns: Model parallel context.
         """
         with _patch_cuda_is_available():
-            from colossalai.utils.model.colo_init_context import ColoInitContext
+            from lightning_colossalai.utils.model.colo_init_context import ColoInitContext
 
         class ModelShardedContext(ColoInitContext):
             def _post_init_method(self, module: torch.nn.Module, *args: Any, **kwargs: Any) -> None:
@@ -239,8 +239,8 @@ class ColossalAIStrategy(DDPStrategy):
 
     def setup_precision_plugin(self) -> None:
         with _patch_cuda_is_available():
-            from colossalai.nn.optimizer import CPUAdam, HybridAdam
-            from colossalai.zero import ZeroOptimizer
+            from lightning_colossalai.nn.optimizer import CPUAdam, HybridAdam
+            from lightning_colossalai.zero import ZeroOptimizer
 
         super().setup_precision_plugin()
         assert self.lightning_module is not None
@@ -260,8 +260,8 @@ class ColossalAIStrategy(DDPStrategy):
 
         if not hasattr(pl_module, "_colossalai_zero"):
             with _patch_cuda_is_available():
-                from colossalai.nn.parallel import GeminiDDP
-                from colossalai.utils import get_current_device
+                from lightning_colossalai.nn.parallel import GeminiDDP
+                from lightning_colossalai.utils import get_current_device
             if not self.use_chunk:
                 raise ValueError("`ColossalAIStrategy` must use chunk in versions higher than 0.1.10")
             chunk_search_range: int = self.chunk_size_search_kwargs.get(
@@ -382,7 +382,7 @@ class ColossalAIStrategy(DDPStrategy):
                 Otherwise, all processes get the same dictionary.
         """
         with _patch_cuda_is_available():
-            from colossalai.nn.parallel import ZeroDDP
+            from lightning_colossalai.nn.parallel import ZeroDDP
 
         assert isinstance(self.model, ZeroDDP)
         org_dict = self.model.state_dict(only_rank_0=rank_zero_only)
@@ -439,9 +439,9 @@ class ColossalAIStrategy(DDPStrategy):
         self, tensor: Tensor, group: Optional[Any] = None, reduce_op: Optional[Union[ReduceOp, str]] = "sum"
     ) -> Tensor:
         with _patch_cuda_is_available():
-            from colossalai.communication.collective import reduce
-            from colossalai.context import ParallelMode
-            from colossalai.core import global_context as gpc
+            from lightning_colossalai.communication.collective import reduce
+            from lightning_colossalai.context import ParallelMode
+            from lightning_colossalai.core import global_context as gpc
 
         if not isinstance(tensor, Tensor):
             return tensor
@@ -466,9 +466,9 @@ class ColossalAIStrategy(DDPStrategy):
             src: source rank
         """
         with _patch_cuda_is_available():
-            from colossalai.communication.collective import broadcast
-            from colossalai.context import ParallelMode
-            from colossalai.core import global_context as gpc
+            from lightning_colossalai.communication.collective import broadcast
+            from lightning_colossalai.context import ParallelMode
+            from lightning_colossalai.core import global_context as gpc
 
         if isinstance(obj, Tensor):
             return broadcast(obj, src=src, parallel_mode=ParallelMode.GLOBAL)
@@ -480,8 +480,8 @@ class ColossalAIStrategy(DDPStrategy):
     def all_gather(self, tensor: Tensor, group: Optional[Any] = None, sync_grads: bool = False) -> Tensor:
         """Perform a all_gather on all processes."""
         with _patch_cuda_is_available():
-            from colossalai.communication.collective import all_gather
-            from colossalai.context import ParallelMode
+            from lightning_colossalai.communication.collective import all_gather
+            from lightning_colossalai.context import ParallelMode
 
         assert sync_grads is False
         return all_gather(tensor, dim=0, parallel_mode=ParallelMode.GLOBAL)
