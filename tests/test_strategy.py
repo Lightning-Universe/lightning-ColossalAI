@@ -29,7 +29,7 @@ from tests import RunIf
 from tests.datamodules import ClassifDataModule
 
 
-def test_invalid_colosalai(monkeypatch):
+def test_invalid_colossalai(monkeypatch):
     monkeypatch.setattr(lightning_colossalai.strategy, "_COLOSSALAI_AVAILABLE", False)
     with pytest.raises(
         ModuleNotFoundError,
