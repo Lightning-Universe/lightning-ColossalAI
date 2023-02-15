@@ -56,7 +56,7 @@ setup(
     author=about.__author__,
     author_email=about.__author_email__,
     url=about.__homepage__,
-    download_url="https://github.com/Lightning-AI/lightning-sandbox",
+    download_url="https://github.com/Lightning-AI/lightning-colossalai",
     license=about.__license__,
     packages=find_packages(where="src"),
     package_dir={"": "src"},
@@ -70,9 +70,9 @@ setup(
     install_requires=_load_requirements(),
     extras_require=_prepare_extras(),
     project_urls={
-        "Bug Tracker": "https://github.com/Lightning-AI/lightning-sandbox/issues",
-        "Documentation": "https://lightning-sandbox.rtfd.io/en/latest/",
-        "Source Code": "https://github.com/Lightning-AI/lightning-sandbox",
+        "Bug Tracker": "https://github.com/Lightning-AI/lightning-colossalai/issues",
+        "Documentation": "https://lightning-colossalai.rtfd.io/en/latest/",
+        "Source Code": "https://github.com/Lightning-AI/lightning-colossalai",
     },
     classifiers=[
         "Environment :: Console",
