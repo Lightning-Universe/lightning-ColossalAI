@@ -30,7 +30,7 @@ SPHINX_MOCK_REQUIREMENTS = int(os.environ.get("SPHINX_MOCK_REQUIREMENTS", True))
 
 # alternative https://stackoverflow.com/a/67692/4521646
 spec = spec_from_file_location(
-    "lit_colossalai/__about__.py", os.path.join(_PATH_SOURCE, "lit_colossalai", "__about__.py")
+    "lightning_colossalai/__about__.py", os.path.join(_PATH_SOURCE, "lightning_colossalai", "__about__.py")
 )
 about = module_from_spec(spec)
 spec.loader.exec_module(about)

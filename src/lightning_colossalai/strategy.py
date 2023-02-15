@@ -34,7 +34,7 @@ from torch import Tensor
 from torch.nn import Module
 from torch.optim.optimizer import Optimizer
 
-from lit_colossalai import ColossalAIPrecisionPlugin
+from lightning_colossalai import ColossalAIPrecisionPlugin
 
 _COLOSSALAI_AVAILABLE = RequirementCache("colossalai")
 if TYPE_CHECKING and _COLOSSALAI_AVAILABLE:

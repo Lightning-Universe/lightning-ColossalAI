@@ -17,21 +17,21 @@ import pytest
 import torch
 import torch.nn.functional as F
 from colossalai.nn.optimizer import HybridAdam
+
+import lightning_colossalai.strategy
 from lightning.pytorch import LightningModule, Trainer, seed_everything
 from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.demos.boring_classes import BoringModel
 from torch import Tensor, nn
 from torchmetrics import Accuracy
 
-from lit_colossalai import ColossalAIPrecisionPlugin, ColossalAIStrategy
+from lightning_colossalai import ColossalAIPrecisionPlugin, ColossalAIStrategy
 from tests import RunIf
 from tests.datamodules import ClassifDataModule
 
 
 def test_invalid_colosalai(monkeypatch):
-    import lightning.pytorch.strategies.colossalai as colossal_strategy
-
-    monkeypatch.setattr(colossal_strategy, "_COLOSSALAI_AVAILABLE", False)
+    monkeypatch.setattr(lightning_colossalai.strategy, "_COLOSSALAI_AVAILABLE", False)
     with pytest.raises(
         ModuleNotFoundError,
         match="To use the `ColossalAIStrategy`, please install `colossalai` first. "
