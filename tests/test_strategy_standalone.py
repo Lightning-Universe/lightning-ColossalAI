@@ -27,6 +27,7 @@ from tests.test_strategy import ModelParallelBoringModel, ModelParallelClassific
 
 def decorate(func, standalone: bool):
     """Mock functions for parsing standalone test, but it does not do anything."""
+
     def wrap(*args, **kwargs):
         return func(*args, **kwargs)
 
