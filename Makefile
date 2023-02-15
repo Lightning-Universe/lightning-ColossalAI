@@ -10,7 +10,7 @@ test: clean
 	pip install -q -r _requirements/test.txt
 
 	# use this to run tests
-	python -m coverage run --source lit_colossalai -m pytest src tests -v --flake8
+	python -m coverage run --source lightning_colossalai -m pytest src tests -v --flake8
 	python -m coverage report
 
 docs: clean

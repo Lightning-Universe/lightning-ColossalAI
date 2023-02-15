@@ -68,7 +68,7 @@ jobs:
 
     - name: Tests
       run: |
-        coverage run --source lit_colossalai -m pytest src tests -v \
+        coverage run --source lightning_colossalai -m pytest src tests -v \
           --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
 
     - name: Upload pytest test results
