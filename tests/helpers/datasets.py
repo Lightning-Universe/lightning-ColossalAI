@@ -23,7 +23,9 @@ class SklearnDataset(Dataset):
         self._y_type = y_type
 
     def __getitem__(self, idx):
+        """GEt single sample."""
         return torch.tensor(self.x[idx], dtype=self._x_type), torch.tensor(self.y[idx], dtype=self._y_type)
 
     def __len__(self):
+        """Dataset length."""
         return len(self.y)

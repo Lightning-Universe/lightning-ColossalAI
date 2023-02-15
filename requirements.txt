@@ -1,2 +1,2 @@
-lightning>=1.9.0
+lightning>=1.9.0, <2.0.0
 colossalai>=0.2.0, <=0.2.4

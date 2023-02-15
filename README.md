@@ -13,7 +13,7 @@ This is starter project template which shall simplify initial steps for each new
 
 Listing the implemented sections:
 
-- sample package named `pl_sandbox`
+- sample package named `pl_colossalai`
 - setting [CI](https://github.com/Lightning-AI/lightning-sandbox/actions?query=workflow%3A%22CI+testing%22) for package and _tests_ folder
 - setup/install package
 - setting docs with Sphinx

@@ -15,7 +15,7 @@ import os
 
 import pytest
 import torch
-import torch.nn.functional as F
+import torch.nn.functional as F  # noqa: N812
 from lightning.pytorch import LightningModule, Trainer, seed_everything
 from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.demos.boring_classes import BoringModel
@@ -29,7 +29,7 @@ from tests.helpers.datamodules import ClassifDataModule
 from tests.helpers.runif import RunIf
 
 if _COLOSSALAI_AVAILABLE:
-    from colossalai.nn.optimizer import HybridAdam
+    from pl_colossalai.nn.optimizer import HybridAdam
 
 
 def test_invalid_colosalai(monkeypatch):

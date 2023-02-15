@@ -24,7 +24,7 @@ from tests.helpers.datamodules import _SKLEARN_AVAILABLE
 
 
 class RunIf:
-    """RunIf wrapper for simple marking specific cases, fully compatible with pytest.mark::
+    """Wrapper for simple marking specific cases, fully compatible with `pytest.mark`.
 
     @RunIf(min_torch="0.0")
     @pytest.mark.parametrize("arg1", [1, 2.0])
@@ -33,7 +33,7 @@ class RunIf:
     """
 
     def __new__(
-        self,
+        cls,
         *args,
         min_cuda_gpus: int = 0,
         min_torch: Optional[str] = None,
@@ -42,20 +42,17 @@ class RunIf:
         sklearn: bool = False,
         **kwargs,
     ):
-        """Args:
-        *args: Any :class:`pytest.mark.skipif` arguments.
-        min_cuda_gpus: Require this number of gpus and that the ``PL_RUN_CUDA_TESTS=1`` environment variable is set.
-        min_torch: Require that PyTorch is greater or equal than this version.
-        max_torch: Require that PyTorch is less than this version.
-        min_python: Require that Python is greater or equal than this version.
-        standalone: Mark the test as standalone, our CI will run it in a separate process.
-        This requires that the ``PL_RUN_STANDALONE_TESTS=1`` environment variable is set.
-        deepspeed: Require that microsoft/DeepSpeed is installed.
-        rich: Require that willmcgugan/rich is installed.
-        omegaconf: Require that omry/omegaconf is installed.
-        psutil: Require that psutil is installed.
-        sklearn: Require that scikit-learn is installed.
-        **kwargs: Any :class:`pytest.mark.skipif` keyword arguments.
+        """Create a new instance.
+
+        Args:
+            *args: Any :class:`pytest.mark.skipif` arguments.
+            min_cuda_gpus: Require this number of gpus and that the ``PL_RUN_CUDA_TESTS=1`` environment variable is set.
+            min_torch: Require that PyTorch is greater or equal than this version.
+            max_torch: Require that PyTorch is less than this version.
+            standalone: Mark the test as standalone, our CI will run it in a separate process.
+                This requires that the ``PL_RUN_STANDALONE_TESTS=1`` environment variable is set.
+            sklearn: Require that scikit-learn is installed.
+            **kwargs: Any :class:`pytest.mark.skipif` keyword arguments.
         """
         conditions = []
         reasons = []

@@ -37,13 +37,15 @@ from torch.optim.optimizer import Optimizer
 _COLOSSALAI_AVAILABLE = RequirementCache("colossalai")
 if TYPE_CHECKING and _COLOSSALAI_AVAILABLE:
     with _patch_cuda_is_available():
-        from colossalai.utils.model.colo_init_context import ColoInitContext
+        from pl_colossalai.utils.model.colo_init_context import ColoInitContext
 else:
     ColoInitContext = Any
 
 
 class ColossalAIStrategy(DDPStrategy):
-    """ColossalAI strategy. It only supports a single optimizer, which must be
+    """ColossalAI strategy.
+
+     It only supports a single optimizer, which must be
     :class:`colossalai.nn.optimizer.CPUAdam` or :class:`colossalai.nn.optimizer.HybridAdam` now. Your model must
     be created in the function ``LightningModule.configure_sharded_model()``. Thus, you should overwrite this function.
     More details can be found in the below example.
@@ -113,7 +115,6 @@ class ColossalAIStrategy(DDPStrategy):
 
     .. _colossalai.nn.optimizer.HybridAdam:
         https://colossalai.readthedocs.io/en/latest/colossalai/colossalai.nn.optimizer.hybrid_adam.html
-
     """
 
     strategy_name = "colossalai"
@@ -148,7 +149,7 @@ class ColossalAIStrategy(DDPStrategy):
                 "Download `colossalai` by consulting `https://colossalai.org/download`."
             )
         with _patch_cuda_is_available():
-            from colossalai.logging import get_dist_logger
+            from pl_colossalai.logging import get_dist_logger
 
         super().__init__(
             accelerator=accelerator,
@@ -184,7 +185,7 @@ class ColossalAIStrategy(DDPStrategy):
     @property
     def root_device(self) -> torch.device:
         with _patch_cuda_is_available():
-            from colossalai.utils import get_current_device
+            from pl_colossalai.utils import get_current_device
 
         if self.parallel_devices is not None:
             return self.parallel_devices[self.local_rank]
@@ -201,9 +202,9 @@ class ColossalAIStrategy(DDPStrategy):
 
     def setup_distributed(self) -> None:
         with _patch_cuda_is_available():
-            from colossalai.context import ParallelMode
-            from colossalai.core import global_context as gpc
-            from colossalai.logging import disable_existing_loggers
+            from pl_colossalai.context import ParallelMode
+            from pl_colossalai.core import global_context as gpc
+            from pl_colossalai.logging import disable_existing_loggers
 
         assert self.cluster_environment is not None
         self.set_world_ranks()
@@ -219,13 +220,15 @@ class ColossalAIStrategy(DDPStrategy):
             gpc.set_device(self.local_rank)
 
     def model_sharded_context(self) -> "ColoInitContext":
-        """Provide hook to create modules in a distributed aware context. This is useful for when we'd like to shard the
+        """Provide hook to create modules in a distributed aware context.
+
+         This is useful for when we'd like to shard the
         model instantly, which is useful for extremely large models which can save memory and initialization time.
 
         Returns: Model parallel context.
         """
         with _patch_cuda_is_available():
-            from colossalai.utils.model.colo_init_context import ColoInitContext
+            from pl_colossalai.utils.model.colo_init_context import ColoInitContext
 
         class ModelShardedContext(ColoInitContext):
             def _post_init_method(self, module: torch.nn.Module, *args: Any, **kwargs: Any) -> None:
@@ -239,8 +242,8 @@ class ColossalAIStrategy(DDPStrategy):
 
     def setup_precision_plugin(self) -> None:
         with _patch_cuda_is_available():
-            from colossalai.nn.optimizer import CPUAdam, HybridAdam
-            from colossalai.zero import ZeroOptimizer
+            from pl_colossalai.nn.optimizer import CPUAdam, HybridAdam
+            from pl_colossalai.zero import ZeroOptimizer
 
         super().setup_precision_plugin()
         assert self.lightning_module is not None
@@ -260,8 +263,8 @@ class ColossalAIStrategy(DDPStrategy):
 
         if not hasattr(pl_module, "_colossalai_zero"):
             with _patch_cuda_is_available():
-                from colossalai.nn.parallel import GeminiDDP
-                from colossalai.utils import get_current_device
+                from pl_colossalai.nn.parallel import GeminiDDP
+                from pl_colossalai.utils import get_current_device
             if not self.use_chunk:
                 raise ValueError("`ColossalAIStrategy` must use chunk in versions higher than 0.1.10")
             chunk_search_range: int = self.chunk_size_search_kwargs.get(
@@ -374,7 +377,9 @@ class ColossalAIStrategy(DDPStrategy):
         return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
 
     def lightning_module_state_dict(self, rank_zero_only: bool = False) -> Dict[str, Any]:
-        """Returns a dictionary containing a whole state of the module. But all the tensors in the dictionary are
+        """Return a dictionary containing a whole state of the module.
+
+        But all the tensors in the dictionary are
         detached from their parameters and located in cpu memory.
 
         Args:
@@ -439,9 +444,9 @@ class ColossalAIStrategy(DDPStrategy):
         self, tensor: Tensor, group: Optional[Any] = None, reduce_op: Optional[Union[ReduceOp, str]] = "sum"
     ) -> Tensor:
         with _patch_cuda_is_available():
-            from colossalai.communication.collective import reduce
-            from colossalai.context import ParallelMode
-            from colossalai.core import global_context as gpc
+            from pl_colossalai.communication.collective import reduce
+            from pl_colossalai.context import ParallelMode
+            from pl_colossalai.core import global_context as gpc
 
         if not isinstance(tensor, Tensor):
             return tensor
@@ -466,9 +471,9 @@ class ColossalAIStrategy(DDPStrategy):
             src: source rank
         """
         with _patch_cuda_is_available():
-            from colossalai.communication.collective import broadcast
-            from colossalai.context import ParallelMode
-            from colossalai.core import global_context as gpc
+            from pl_colossalai.communication.collective import broadcast
+            from pl_colossalai.context import ParallelMode
+            from pl_colossalai.core import global_context as gpc
 
         if isinstance(obj, Tensor):
             return broadcast(obj, src=src, parallel_mode=ParallelMode.GLOBAL)
@@ -480,8 +485,8 @@ class ColossalAIStrategy(DDPStrategy):
     def all_gather(self, tensor: Tensor, group: Optional[Any] = None, sync_grads: bool = False) -> Tensor:
         """Perform a all_gather on all processes."""
         with _patch_cuda_is_available():
-            from colossalai.communication.collective import all_gather
-            from colossalai.context import ParallelMode
+            from pl_colossalai.communication.collective import all_gather
+            from pl_colossalai.context import ParallelMode
 
         assert sync_grads is False
         return all_gather(tensor, dim=0, parallel_mode=ParallelMode.GLOBAL)
