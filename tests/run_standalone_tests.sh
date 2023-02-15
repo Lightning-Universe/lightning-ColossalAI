@@ -37,7 +37,7 @@ else
   parametrizations=$(python -m pytest $files --collect-only --quiet "$@" | head -n -2)
 fi
 # remove the "tests/" path suffixes
-path_suffix=$(basename "$(dirname "$(pwd)")")/"/"  # https://stackoverflow.com/a/8223345
+path_suffix="tests/"  # https://stackoverflow.com/a/8223345
 parametrizations=${parametrizations//$path_suffix/}
 parametrizations_arr=($parametrizations)
 
