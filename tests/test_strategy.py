@@ -16,16 +16,13 @@ import os
 import pytest
 import torch
 import torch.nn.functional as F  # noqa: N812
+from colossalai.nn.optimizer import HybridAdam
 from lightning.pytorch import LightningModule, Trainer
 from lightning.pytorch.demos.boring_classes import BoringModel
 from lightning.pytorch.plugins.precision import ColossalAIPrecisionPlugin
 from lightning.pytorch.strategies import ColossalAIStrategy
-from lightning.pytorch.strategies.colossalai import _COLOSSALAI_AVAILABLE
 from torch import nn
 from torchmetrics import Accuracy
-
-if _COLOSSALAI_AVAILABLE:
-    from colossalai.nn.optimizer import HybridAdam
 
 
 def test_invalid_colosalai(monkeypatch):

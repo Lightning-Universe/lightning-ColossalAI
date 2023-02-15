@@ -14,19 +14,27 @@
 
 import torch
 from lightning.pytorch.core.datamodule import LightningDataModule
-from lightning_utilities.core.imports import RequirementCache
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Dataset
 
-from tests.helpers.datasets import SklearnDataset
 
-_SKLEARN_AVAILABLE = RequirementCache("scikit-learn")
+class SklearnDataset(Dataset):
+    def __init__(self, x, y, x_type, y_type):
+        self.x = x
+        self.y = y
+        self._x_type = x_type
+        self._y_type = y_type
+
+    def __getitem__(self, idx):
+        """GEt single sample."""
+        return torch.tensor(self.x[idx], dtype=self._x_type), torch.tensor(self.y[idx], dtype=self._y_type)
+
+    def __len__(self):
+        """Dataset length."""
+        return len(self.y)
 
 
 class SklearnDataModule(LightningDataModule):
     def __init__(self, sklearn_dataset, x_type, y_type, batch_size: int = 10):
-        if not _SKLEARN_AVAILABLE:
-            raise ImportError(str(_SKLEARN_AVAILABLE))
-
         super().__init__()
         self.batch_size = batch_size
         self._x, self._y = sklearn_dataset
@@ -74,8 +82,6 @@ class ClassifDataModule(SklearnDataModule):
     def __init__(
         self, num_features=32, length=800, num_classes=3, batch_size=10, n_clusters_per_class=1, n_informative=2
     ):
-        if not _SKLEARN_AVAILABLE:
-            raise ImportError(str(_SKLEARN_AVAILABLE))
 
         from sklearn.datasets import make_classification
 
