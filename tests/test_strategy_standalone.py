@@ -25,16 +25,20 @@ from tests.datamodules import ClassifDataModule
 from tests.test_strategy import ModelParallelBoringModel, ModelParallelClassificationModel
 
 
-def decorate(func, standalone: bool):
+class Decorator:
     """Mock functions for parsing standalone test, but it does not do anything."""
 
-    def wrap(*args, **kwargs):
-        return func(*args, **kwargs)
+    def __init__(self, standalone: bool):
+        pass
 
-    return wrap
+    def __call__(self, func):
+        def wrapper(*args, **kwargs):
+            func(*args, **kwargs)
+
+        return wrapper
 
 
-@decorate(standalone=True)
+@Decorator(standalone=True)
 @pytest.mark.skipif(torch.cuda.device_count() < 1, reason="This test needs at least single GPU.")
 def test_colossalai_optimizer(tmpdir):
     model = BoringModel()
@@ -56,7 +60,7 @@ def test_colossalai_optimizer(tmpdir):
         trainer.fit(model)
 
 
-@decorate(standalone=True)
+@Decorator(standalone=True)
 @pytest.mark.skipif(torch.cuda.device_count() < 1, reason="This test needs at least single GPU.")
 def test_warn_colossalai_ignored(tmpdir):
     class TestModel(ModelParallelBoringModel):
@@ -79,7 +83,7 @@ def test_warn_colossalai_ignored(tmpdir):
         trainer.fit(model)
 
 
-@decorate(standalone=True)
+@Decorator(standalone=True)
 def _assert_save_model_is_equal(model, tmpdir, trainer):
     checkpoint_path = os.path.join(tmpdir, "model.pt")
     checkpoint_path = trainer.strategy.broadcast(checkpoint_path)
@@ -96,7 +100,7 @@ def _assert_save_model_is_equal(model, tmpdir, trainer):
             assert torch.equal(orig_param, saved_model_param)
 
 
-@decorate(standalone=True)
+@Decorator(standalone=True)
 @pytest.mark.skipif(torch.cuda.device_count() < 2, reason="This test needs at least 2 GPUs.")
 def test_multi_gpu_checkpointing(tmpdir):
     dm = ClassifDataModule()
@@ -120,7 +124,7 @@ def test_multi_gpu_checkpointing(tmpdir):
     assert saved_results == results
 
 
-@decorate(standalone=True)
+@Decorator(standalone=True)
 @pytest.mark.xfail(raises=AssertionError, match="You should run a completed iteration as your warmup iter")
 @pytest.mark.skipif(torch.cuda.device_count() < 2, reason="This test needs at least 2 GPUs.")
 def test_test_without_fit(tmpdir):
@@ -133,7 +137,7 @@ def test_test_without_fit(tmpdir):
     trainer.test(model, datamodule=dm)
 
 
-@decorate(standalone=True)
+@Decorator(standalone=True)
 @pytest.mark.skipif(torch.cuda.device_count() < 2, reason="This test needs at least 2 GPUs.")
 def test_multi_gpu_model_colossalai_fit_test(tmpdir):
     seed_everything(7)
