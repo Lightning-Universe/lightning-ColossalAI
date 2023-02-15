@@ -16,14 +16,12 @@ import os
 import pytest
 import torch
 import torch.nn.functional as F
-from torch import nn, Tensor
-from torchmetrics import Accuracy
-
-from lightning.pytorch import LightningModule, seed_everything, Trainer
+from colossalai.nn.optimizer import HybridAdam
+from lightning.pytorch import LightningModule, Trainer, seed_everything
 from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.demos.boring_classes import BoringModel
-
-from colossalai.nn.optimizer import HybridAdam
+from torch import Tensor, nn
+from torchmetrics import Accuracy
 
 from lit_colossalai import ColossalAIPrecisionPlugin, ColossalAIStrategy
 from tests import RunIf
