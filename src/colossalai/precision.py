@@ -11,14 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Callable, cast, Literal, Optional, Union
-
-from torch import Tensor
-from torch.optim import Optimizer
+from typing import Any, Callable, Literal, Optional, Union, cast
 
 import lightning.pytorch as pl
 from lightning.fabric.utilities.types import Steppable
 from lightning.pytorch.plugins.precision.precision_plugin import PrecisionPlugin
+from torch import Tensor
+from torch.optim import Optimizer
 
 
 class ColossalAIPrecisionPlugin(PrecisionPlugin):

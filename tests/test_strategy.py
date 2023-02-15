@@ -16,15 +16,15 @@ import os
 import pytest
 import torch
 import torch.nn.functional as F
-from torch import nn, Tensor
-from torchmetrics import Accuracy
-
-from lightning.pytorch import LightningModule, seed_everything, Trainer
+from lightning.pytorch import LightningModule, Trainer, seed_everything
 from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.demos.boring_classes import BoringModel
 from lightning.pytorch.plugins.precision import ColossalAIPrecisionPlugin
 from lightning.pytorch.strategies import ColossalAIStrategy
 from lightning.pytorch.strategies.colossalai import _COLOSSALAI_AVAILABLE
+from torch import Tensor, nn
+from torchmetrics import Accuracy
+
 from tests.helpers.datamodules import ClassifDataModule
 from tests.helpers.runif import RunIf
 

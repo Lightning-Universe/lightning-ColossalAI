@@ -12,15 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import math
-from typing import Any, Callable, Dict, List, Mapping, Optional, OrderedDict, TYPE_CHECKING, Union
-
-import torch
-from lightning_utilities.core.imports import RequirementCache
-from torch import Tensor
-from torch.nn import Module
-from torch.optim.optimizer import Optimizer
+from typing import TYPE_CHECKING, Any, Callable, Dict, List, Mapping, Optional, OrderedDict, Union
 
 import lightning.pytorch as pl
+import torch
 from lightning.fabric.accelerators.cuda import _patch_cuda_is_available
 from lightning.fabric.plugins.environments.cluster_environment import ClusterEnvironment
 from lightning.fabric.utilities.distributed import ReduceOp
@@ -34,6 +29,10 @@ from lightning.pytorch.trainer.states import TrainerFn
 from lightning.pytorch.utilities.model_helpers import is_overridden
 from lightning.pytorch.utilities.rank_zero import rank_zero_warn
 from lightning.pytorch.utilities.types import STEP_OUTPUT
+from lightning_utilities.core.imports import RequirementCache
+from torch import Tensor
+from torch.nn import Module
+from torch.optim.optimizer import Optimizer
 
 _COLOSSALAI_AVAILABLE = RequirementCache("colossalai")
 if TYPE_CHECKING and _COLOSSALAI_AVAILABLE:
@@ -220,9 +219,8 @@ class ColossalAIStrategy(DDPStrategy):
             gpc.set_device(self.local_rank)
 
     def model_sharded_context(self) -> "ColoInitContext":
-        """Provide hook to create modules in a distributed aware context. This is useful for when we'd like to
-        shard the model instantly, which is useful for extremely large models which can save memory and
-        initialization time.
+        """Provide hook to create modules in a distributed aware context. This is useful for when we'd like to shard the
+        model instantly, which is useful for extremely large models which can save memory and initialization time.
 
         Returns: Model parallel context.
         """
@@ -351,7 +349,7 @@ class ColossalAIStrategy(DDPStrategy):
 
     def teardown(self) -> None:
         optimizers = self.optimizers
-        self.optimizers = list()
+        self.optimizers = []
         zero_model = self.model
         self.model = None
         pl_module = self._lightning_module
@@ -395,8 +393,8 @@ class ColossalAIStrategy(DDPStrategy):
         prefix += "."
         assert child is self.lightning_module
 
-        mapping_dict = dict()
-        for key in org_dict.keys():
+        mapping_dict = {}
+        for key in org_dict:
             mapping_dict[key] = key.replace(prefix, "")  # remove "_forward_module." from the key
 
         return {mapping_dict[key]: value for key, value in org_dict.items()}
@@ -411,8 +409,8 @@ class ColossalAIStrategy(DDPStrategy):
         prefix += "."
         assert child is self.lightning_module
 
-        mapping_dict = dict()
-        for key in orig_dict.keys():
+        mapping_dict = {}
+        for key in orig_dict:
             mapping_dict[key] = prefix + key  # add "_forward_module." to the key
 
         load_dict = OrderedDict({mapping_dict[key]: value for key, value in orig_dict.items()})
