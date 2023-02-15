@@ -1,7 +1,7 @@
 """Basic testing template."""
 import pytest
 
-from pl_sandbox.my_module import my_sample_func
+from pl_colossalai.my_module import my_sample_func
 
 
 @pytest.mark.parametrize(
