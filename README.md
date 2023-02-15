@@ -10,7 +10,7 @@ ______________________________________________________________________
 
 ## Installation
 
-```commandline
+```bash
 pip install -U lightning lightning-colossalai
 ```
 
