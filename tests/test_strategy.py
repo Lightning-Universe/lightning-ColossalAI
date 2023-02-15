@@ -17,12 +17,17 @@ import pytest
 import torch
 import torch.nn.functional as F  # noqa: N812
 from colossalai.nn.optimizer import HybridAdam
+from lightning import seed_everything
 from lightning.pytorch import LightningModule, Trainer
+from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.demos.boring_classes import BoringModel
 from lightning.pytorch.plugins.precision import ColossalAIPrecisionPlugin
 from lightning.pytorch.strategies import ColossalAIStrategy
-from torch import nn
+from torch import Tensor, nn
 from torchmetrics import Accuracy
+
+from tests import RunIf
+from tests.datamodules import ClassifDataModule
 
 
 def test_invalid_colosalai(monkeypatch):
@@ -160,3 +165,125 @@ class ModelParallelClassificationModel(LightningModule):
     def predict_step(self, batch, batch_idx):
         x, _ = batch
         return self.forward(x)
+
+
+@RunIf(min_gpus=1, standalone=True)
+def test_colossalai_optimizer(tmpdir):
+    model = BoringModel()
+    trainer = Trainer(
+        fast_dev_run=True,
+        default_root_dir=tmpdir,
+        accelerator="gpu",
+        devices=1,
+        precision=16,
+        strategy="colossalai",
+        enable_progress_bar=False,
+        enable_model_summary=False,
+    )
+    with pytest.raises(
+        ValueError,
+        match="`ColossalAIStrategy` only supports `colossalai.nn.optimizer.CPUAdam` "
+        "and `colossalai.nn.optimizer.HybridAdam` as its optimizer.",
+    ):
+        trainer.fit(model)
+
+
+@RunIf(min_gpus=1, standalone=True)
+def test_warn_colossalai_ignored(tmpdir):
+    class TestModel(ModelParallelBoringModel):
+        def backward(self, loss: Tensor, *args, **kwargs) -> None:
+            return loss.backward()
+
+    model = TestModel()
+    trainer = Trainer(
+        fast_dev_run=True,
+        default_root_dir=tmpdir,
+        accelerator="gpu",
+        devices=1,
+        precision=16,
+        strategy="colossalai",
+        enable_progress_bar=False,
+        enable_model_summary=False,
+    )
+
+    with pytest.warns(UserWarning, match="will be ignored since ColossalAI handles the backward"):
+        trainer.fit(model)
+
+
+def _assert_save_model_is_equal(model, tmpdir, trainer):
+    checkpoint_path = os.path.join(tmpdir, "model.pt")
+    checkpoint_path = trainer.strategy.broadcast(checkpoint_path)
+    trainer.save_checkpoint(checkpoint_path)
+    trainer.strategy.barrier()
+
+    # carry out the check only on rank 0
+    if trainer.is_global_zero:
+        state_dict = torch.load(checkpoint_path)
+
+        # Assert model parameters are identical after loading
+        for orig_param, saved_model_param in zip(model.parameters(), state_dict.values()):
+            saved_model_param = saved_model_param.to(dtype=orig_param.dtype, device=orig_param.device)
+            assert torch.equal(orig_param, saved_model_param)
+
+
+@RunIf(min_gpus=2, standalone=True)
+def test_multi_gpu_checkpointing(tmpdir):
+    dm = ClassifDataModule()
+    model = ModelParallelClassificationModel()
+    ck = ModelCheckpoint(monitor="val_acc", mode="max", save_last=True, save_top_k=-1)
+
+    trainer = Trainer(
+        default_root_dir=tmpdir,
+        max_epochs=1,
+        accelerator="gpu",
+        devices=2,
+        precision=16,
+        strategy="colossalai",
+        callbacks=[ck],
+        num_sanity_val_steps=0,  # TODO: remove once validation/test before fitting is supported again
+    )
+    trainer.fit(model, datamodule=dm)
+
+    results = trainer.test(datamodule=dm)
+    saved_results = trainer.test(ckpt_path=ck.best_model_path, datamodule=dm)
+    assert saved_results == results
+
+
+@pytest.mark.xfail(raises=AssertionError, match="You should run a completed iteration as your warmup iter")
+@RunIf(min_gpus=2, standalone=True)
+def test_test_without_fit(tmpdir):
+    model = ModelParallelClassificationModel()
+    dm = ClassifDataModule()
+    trainer = Trainer(default_root_dir=tmpdir, accelerator="gpu", devices=2, precision=16, strategy="colossalai")
+
+    # Colossal requires warmup, you can't run validation/test without having fit first
+    # This is a temporary limitation
+    trainer.test(model, datamodule=dm)
+
+
+@RunIf(min_gpus=2, standalone=True)
+def test_multi_gpu_model_colossalai_fit_test(tmpdir):
+    seed_everything(7)
+
+    dm = ClassifDataModule()
+    model = ModelParallelClassificationModel()
+    trainer = Trainer(
+        default_root_dir=tmpdir,
+        accelerator="gpu",
+        devices=2,
+        precision=16,
+        strategy=ColossalAIStrategy(initial_scale=32),
+        max_epochs=1,
+        num_sanity_val_steps=0,  # TODO: remove once validation/test before fitting is supported again
+    )
+    trainer.fit(model, datamodule=dm)
+
+    if trainer.is_global_zero:
+        out_metrics = trainer.callback_metrics
+        assert out_metrics["train_acc"].item() > 0.7
+        assert out_metrics["val_acc"].item() > 0.7
+
+    result = trainer.test(model, datamodule=dm)
+    if trainer.is_global_zero:
+        for out in result:
+            assert out["test_acc"] > 0.7
