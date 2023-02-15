@@ -16,7 +16,6 @@ You still need to enable some external integrations such as:
 - [ ] lock the main breach in GH setting - no direct push without PR
 - [ ] init Read-The-Docs (add this new project)
 - [ ] add credentials for releasing package to PyPI
-- [ ] specify license in `LICENSE` file and package init
 
 ## Tests / Docs notes
 

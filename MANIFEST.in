@@ -17,15 +17,6 @@ exclude *.svg
 exclude *.yml
 exclude *.yaml
 
-# exclude tests from package
-recursive-exclude tests *
-recursive-exclude site *
-exclude tests
-
-# Exclude the documentation files
-recursive-exclude docs *
-exclude docs
-
 # Include the Requirements
 include requirements.txt
 
@@ -34,8 +25,6 @@ exclude Makefile
 
 prune .git
 prune .github
-prune .circleci
-prune notebook*
+prune docs*
 prune temp*
 prune test*
-prune benchmark*

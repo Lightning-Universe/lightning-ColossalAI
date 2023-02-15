@@ -34,8 +34,7 @@ jobs:
     # Github Actions: Run step on specific OS: https://stackoverflow.com/a/57948488/4521646
     - name: Setup macOS
       if: runner.os == 'macOS'
-      run: |
-        brew install libomp  # https://github.com/pytorch/pytorch/issues/20030
+      run: brew install libomp  # https://github.com/pytorch/pytorch/issues/20030
 
     - name: Set min. dependencies
       if: matrix.requires == 'oldest'
@@ -45,18 +44,6 @@ jobs:
             open(fpath, 'w').write(req)
       shell: python
 
-    - name: Get pip cache dir
-      id: pip-cache
-      run: echo "dir=$(pip cache dir)" >> $GITHUB_OUTPUT
-
-    - name: Cache pip
-      uses: actions/cache@v3
-      with:
-        path: ${{ steps.pip-cache.outputs.dir }}
-        key: ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}-pip-${{ hashFiles('requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}-pip-
-
     - name: Install package & dependencies
       run: |
         pip --version
@@ -64,19 +51,9 @@ jobs:
         pip list
 
     - name: Tests
-      run: |
-        coverage run --source pl_colossalai -m pytest src tests -v \
-          --junitxml=junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
-
-    - name: Upload pytest test results
-      uses: actions/upload-artifact@v3
-      with:
-        name: pytest-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}
-        path: junit/test-results-${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.requires }}.xml
-      if: failure()
+      run: coverage run --source lightning_colossalai -m pytest src tests -v
 
     - name: Statistics
-      if: success()
       run: |
         coverage report
         coverage xml
