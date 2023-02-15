@@ -12,7 +12,7 @@ _PATH_SOURCE = os.path.join(_PATH_ROOT, "src")
 _PATH_REQUIRES = os.path.join(_PATH_ROOT, "_requirements")
 
 
-def _load_py_module(fname, pkg="lightning_colossalai"):
+def _load_py_module(fname, pkg="pl_colossalai"):
     spec = spec_from_file_location(os.path.join(pkg, fname), os.path.join(_PATH_SOURCE, pkg, fname))
     py = module_from_spec(spec)
     spec.loader.exec_module(py)
