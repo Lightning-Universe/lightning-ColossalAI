@@ -51,7 +51,7 @@ exclude = "(.eggs|.git|.hg|.mypy_cache|.venv|_build|buck-out|build|dist)"
 
 [tool.isort]
 known_first_party = [
-    "pl_colossalai",
+    "lit_colossalai",
     "integrations",
     "unittests",
     "integrations",
@@ -83,8 +83,8 @@ warn_no_return = false
 # TODO: the goal is for this to be empty
 [[tool.mypy.overrides]]
 module = [
-    "pl_colossalai.precision",
-    "pl_colossalai.strategy",
+    "lit_colossalai.precision",
+    "lit_colossalai.strategy",
 ]
 ignore_errors = "True"
 
