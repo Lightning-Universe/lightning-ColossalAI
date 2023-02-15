@@ -3,7 +3,7 @@ __author__ = "Lightning-AI et al."
 __author_email__ = "name@lightning.ai"
 __license__ = "TBD"  # TODO
 __copyright__ = f"Copyright (c) 2020-2022, {__author__}."
-__homepage__ = "https://github.com/Lightning-AI/lightning-sandbox"
+__homepage__ = "https://github.com/Lightning-AI/lightning-colossalai"
 __docs__ = "PyTorch Lightning Sample project."
 # todo: consider loading Readme here...
 __long_doc__ = """
