@@ -242,8 +242,8 @@ class ColossalAIStrategy(DDPStrategy):
 
     def setup_precision_plugin(self) -> None:
         with _patch_cuda_is_available():
-            from pl_colossalai.nn.optimizer import CPUAdam, HybridAdam
-            from pl_colossalai.zero import ZeroOptimizer
+            from colossalai.nn.optimizer import CPUAdam, HybridAdam
+            from colossalai.zero import ZeroOptimizer
 
         super().setup_precision_plugin()
         assert self.lightning_module is not None
