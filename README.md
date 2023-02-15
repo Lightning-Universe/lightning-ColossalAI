@@ -1,6 +1,6 @@
 # Lightning + Colossal-AI
 
-**Large-Scale Distributed Model Training with [Colossal AI](https://colossalai.org/) and [Lightning AI](https://lightning.ai)**
+**Large-Scale Distributed Model Training with [Colossal-AI](https://colossalai.org/) and [Lightning AI](https://lightning.ai)**
 
 ______________________________________________________________________
 
