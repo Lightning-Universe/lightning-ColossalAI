@@ -8,7 +8,6 @@ ______________________________________________________________________
 [![General checks](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-checks.yml/badge.svg?event=push)](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-checks.yml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Lightning-AI/lightning-colossalai/main.svg?badge_token=SP8B_IRmT32JEhKRT6afQg)](https://results.pre-commit.ci/latest/github/Lightning-AI/lightning-colossalai/main?badge_token=SP8B_IRmT32JEhKRT6afQg)
 
-
 ## Installation
 
 ```commandline
