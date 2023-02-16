@@ -21,10 +21,12 @@ def _load_py_module(fname, pkg="lightning_colossalai"):
 
 def _load_requirements(path_dir: str = _PATH_ROOT, file_name: str = "requirements.txt") -> list:
     reqs = parse_requirements(open(os.path.join(path_dir, file_name)).readlines())
-    return list(map(str, reqs))
+    return [str(r).split("@")[0].strip() for r in reqs]
 
 
 about = _load_py_module("__about__.py")
+with open(os.path.join(_PATH_ROOT, "README.md"), encoding="utf-8") as fo:
+    readme = fo.read()
 
 
 def _prepare_extras(requirements_dir: str = _PATH_REQUIRES, skip_files: tuple = ("devel.txt", "docs.txt")) -> dict:
@@ -60,7 +62,7 @@ setup(
     license=about.__license__,
     packages=find_packages(where="src"),
     package_dir={"": "src"},
-    long_description=about.__long_doc__,
+    long_description=readme,
     long_description_content_type="text/markdown",
     include_package_data=True,
     zip_safe=False,
