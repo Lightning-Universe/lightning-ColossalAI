@@ -20,6 +20,9 @@ set -e
 test_batch_size="${PL_STANDALONE_TESTS_BATCH_SIZE:-6}"
 source="${PL_STANDALONE_TESTS_SOURCE:-"lightning_colossalai"}"
 
+# this environment variable allows special tests to run
+export PL_RUN_STANDALONE_TESTS=1
+
 # python arguments
 defaults="-m coverage run --source $source --append -m pytest --no-header -v -s"
 
