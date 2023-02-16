@@ -1,6 +1,6 @@
 # Lightning + Colossal-AI
 
-**Large-Scale Distributed Model Training with [Colossal-AI](https://colossalai.org/) and [Lightning AI](https://lightning.ai)**
+**Efficient Large-Scale Distributed Training with [Colossal-AI](https://colossalai.org/) and [Lightning AI](https://lightning.ai)**
 
 ______________________________________________________________________
 
@@ -16,7 +16,7 @@ pip install -U lightning lightning-colossalai
 
 ## Usage
 
-Simply set the strategy arugment in the Trainer:
+Simply set the strategy argument in the Trainer:
 
 ```py
 import lightning as L
