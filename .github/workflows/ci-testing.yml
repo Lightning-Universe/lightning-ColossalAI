@@ -47,7 +47,9 @@ jobs:
     - name: Install package & dependencies
       run: |
         pip --version
-        pip install -e '.[test]' -U -q --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
+        # TODO: repeat this requirements.txt as it includes URL which is dropped in package req.
+        pip install -e '.[test]' -U -q -r requirements.txt \
+          --find-links https://download.pytorch.org/whl/cpu/torch_stable.html
         pip list
 
     - name: Tests
