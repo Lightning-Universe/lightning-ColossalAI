@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Any, Callable, Literal, Optional, Union, cast
+from typing import Any, Callable, Literal, Optional, Union
 
 from lightning.fabric.utilities.types import Steppable
 from lightning.pytorch import LightningModule
@@ -24,20 +24,20 @@ class ColossalAIPrecisionPlugin(PrecisionPlugin):
     """Precision plugin for ColossalAI integration.
 
     Args:
-        precision: Half precision (16).
+        precision: Half precision (16-mixed).
 
     Raises:
         ValueError:
-            If precison is not 16.
+            If precison is not 16-mixed.
     """
 
-    def __init__(self, precision: Literal["16", 16, "16-mixed"] = 16) -> None:
-        if precision not in ("16", 16):
+    def __init__(self, precision: Literal["16-mixed"] = 16) -> None:
+        if precision != "16-mixed":
             raise ValueError(
                 f"`Trainer(strategy='colossalai', precision={precision!r})` is not supported."
-                " Consider setting `precision=16`."
+                " Consider setting `precision='16-mixed'`."
             )
-        self.precision = cast(Literal["16", "16-mixed"], str(precision))
+        self.precision = precision
 
     def backward(  # type: ignore[override]
         self,
