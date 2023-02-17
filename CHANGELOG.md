@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Changed precision argument to only support the lightning 2.0 `precision="16-mixed"` argument ([#9](https://github.com/Lightning-AI/lightning-colossalai/pull/9))
+
 ### Fixed
 
 ### Removed
