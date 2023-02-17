@@ -300,7 +300,7 @@ class ColossalAIStrategy(DDPStrategy):
 
     def setup(self, trainer: Trainer) -> None:
         precision = self.precision_plugin.precision
-        if precision != "16":
+        if precision not in ("16", "16-mixed"):
             raise ValueError(
                 f"`Trainer(strategy='colossalai', precision={precision!r})` is not supported."
                 " Consider setting `precision=16`."

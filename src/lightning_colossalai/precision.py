@@ -31,13 +31,13 @@ class ColossalAIPrecisionPlugin(PrecisionPlugin):
             If precison is not 16.
     """
 
-    def __init__(self, precision: Literal["16", 16] = 16) -> None:
+    def __init__(self, precision: Literal["16", 16, "16-mixed"] = 16) -> None:
         if precision not in ("16", 16):
             raise ValueError(
                 f"`Trainer(strategy='colossalai', precision={precision!r})` is not supported."
                 " Consider setting `precision=16`."
             )
-        self.precision = cast(Literal["16"], str(precision))
+        self.precision = cast(Literal["16", "16-mixed"], str(precision))
 
     def backward(  # type: ignore[override]
         self,
