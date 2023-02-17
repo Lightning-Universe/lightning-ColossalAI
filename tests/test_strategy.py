@@ -235,7 +235,9 @@ def test_multi_gpu_checkpointing(tmpdir):
 def test_test_without_fit(tmpdir):
     model = ModelParallelClassificationModel()
     dm = ClassifDataModule()
-    trainer = Trainer(default_root_dir=tmpdir, accelerator="gpu", devices=2, precision="16-mixed", strategy="colossalai")
+    trainer = Trainer(
+        default_root_dir=tmpdir, accelerator="gpu", devices=2, precision="16-mixed", strategy="colossalai"
+    )
 
     # Colossal requires warmup, you can't run validation/test without having fit first
     # This is a temporary limitation
