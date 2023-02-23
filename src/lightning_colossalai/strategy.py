@@ -20,7 +20,6 @@ from torch import Tensor
 from torch.nn import Module
 from torch.optim.optimizer import Optimizer
 
-
 if module_available("lightning"):
     from lightning.fabric.accelerators.cuda import _patch_cuda_is_available
     from lightning.fabric.plugins.environments.cluster_environment import ClusterEnvironment
