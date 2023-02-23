@@ -13,11 +13,20 @@
 # limitations under the License.
 from typing import Any, Callable, Literal, Optional, Union
 
-from lightning.fabric.utilities.types import Steppable
-from lightning.pytorch import LightningModule
-from lightning.pytorch.plugins.precision.precision_plugin import PrecisionPlugin
+from lightning_utilities import module_available
 from torch import Tensor
 from torch.optim import Optimizer
+
+if module_available("lightning"):
+    from lightning.fabric.utilities.types import Steppable
+    from lightning.pytorch import LightningModule
+    from lightning.pytorch.plugins.precision.precision_plugin import PrecisionPlugin
+elif module_available("pytorch_lightning"):
+    from lightning_fabric.utilities.types import Steppable
+    from pytorch_lightning import LightningModule
+    from pytorch_lightning.plugins.precision.precision_plugin import PrecisionPlugin
+else:
+    raise ModuleNotFoundError("You are missing `lightning` or `pytorch-lightning` package, please install it.")
 
 
 class ColossalAIPrecisionPlugin(PrecisionPlugin):

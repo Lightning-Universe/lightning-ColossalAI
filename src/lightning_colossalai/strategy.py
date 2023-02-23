@@ -15,24 +15,44 @@ import math
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Mapping, Optional, OrderedDict, Union
 
 import torch
-from lightning.fabric.accelerators.cuda import _patch_cuda_is_available
-from lightning.fabric.plugins.environments.cluster_environment import ClusterEnvironment
-from lightning.fabric.utilities.distributed import ReduceOp
-from lightning.pytorch import LightningModule, Trainer
-from lightning.pytorch.accelerators import Accelerator
-from lightning.pytorch.accelerators.cuda import CUDAAccelerator
-from lightning.pytorch.overrides.base import _LightningModuleWrapperBase, _LightningPrecisionModuleWrapperBase
-from lightning.pytorch.plugins.io.checkpoint_plugin import CheckpointIO
-from lightning.pytorch.strategies.ddp import DDPStrategy
-from lightning.pytorch.strategies.strategy import TBroadcast
-from lightning.pytorch.trainer.states import TrainerFn
-from lightning.pytorch.utilities.model_helpers import is_overridden
-from lightning.pytorch.utilities.rank_zero import rank_zero_warn
-from lightning.pytorch.utilities.types import STEP_OUTPUT
-from lightning_utilities.core.imports import RequirementCache
+from lightning_utilities.core.imports import RequirementCache, module_available
 from torch import Tensor
 from torch.nn import Module
 from torch.optim.optimizer import Optimizer
+
+
+if module_available("lightning"):
+    from lightning.fabric.accelerators.cuda import _patch_cuda_is_available
+    from lightning.fabric.plugins.environments.cluster_environment import ClusterEnvironment
+    from lightning.fabric.utilities.distributed import ReduceOp
+    from lightning.pytorch import LightningModule, Trainer
+    from lightning.pytorch.accelerators import Accelerator
+    from lightning.pytorch.accelerators.cuda import CUDAAccelerator
+    from lightning.pytorch.overrides.base import _LightningModuleWrapperBase, _LightningPrecisionModuleWrapperBase
+    from lightning.pytorch.plugins.io.checkpoint_plugin import CheckpointIO
+    from lightning.pytorch.strategies.ddp import DDPStrategy
+    from lightning.pytorch.strategies.strategy import TBroadcast
+    from lightning.pytorch.trainer.states import TrainerFn
+    from lightning.pytorch.utilities.model_helpers import is_overridden
+    from lightning.pytorch.utilities.rank_zero import rank_zero_warn
+    from lightning.pytorch.utilities.types import STEP_OUTPUT
+elif module_available("pytorch_lightning"):
+    from lightning_fabric.accelerators.cuda import _patch_cuda_is_available
+    from lightning_fabric.plugins.environments.cluster_environment import ClusterEnvironment
+    from lightning_fabric.utilities.distributed import ReduceOp
+    from pytorch_lightning import LightningModule, Trainer
+    from pytorch_lightning.accelerators import Accelerator
+    from pytorch_lightning.accelerators.cuda import CUDAAccelerator
+    from pytorch_lightning.overrides.base import _LightningModuleWrapperBase, _LightningPrecisionModuleWrapperBase
+    from pytorch_lightning.plugins.io.checkpoint_plugin import CheckpointIO
+    from pytorch_lightning.strategies.ddp import DDPStrategy
+    from pytorch_lightning.strategies.strategy import TBroadcast
+    from pytorch_lightning.trainer.states import TrainerFn
+    from pytorch_lightning.utilities.model_helpers import is_overridden
+    from pytorch_lightning.utilities.rank_zero import rank_zero_warn
+    from pytorch_lightning.utilities.types import STEP_OUTPUT
+else:
+    raise ModuleNotFoundError("You are missing `lightning` or `pytorch-lightning` package, please install it.")
 
 from lightning_colossalai import ColossalAIPrecisionPlugin
 
