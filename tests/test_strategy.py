@@ -93,7 +93,10 @@ def test_gradient_clip_algorithm_error(tmpdir):
 
 @RunIf(min_cuda_gpus=1, standalone=True, colossalai=True)
 def test_colossalai_optimizer(tmpdir):
-    model = BoringModel()
+    class UnsupportedOptimizerModel(ModelParallelBoringModel):
+        def configure_optimizers(self):
+            return torch.optim.Adam(self.parameters())
+
     trainer = Trainer(
         fast_dev_run=True,
         default_root_dir=tmpdir,
@@ -109,7 +112,7 @@ def test_colossalai_optimizer(tmpdir):
         match="`ColossalAIStrategy` only supports `colossalai.nn.optimizer.CPUAdam` "
         "and `colossalai.nn.optimizer.HybridAdam` as its optimizer.",
     ):
-        trainer.fit(model)
+        trainer.fit(UnsupportedOptimizerModel())
 
 
 @RunIf(min_cuda_gpus=1, standalone=True, colossalai=True)
