@@ -134,6 +134,28 @@ def test_warn_colossalai_ignored(tmpdir):
         trainer.fit(model)
 
 
+@RunIf(min_cuda_gpus=1, standalone=True, colossalai=True)
+def test_configure_sharded_model_hook_not_overridden(tmpdir):
+    class TestModel(BoringModel):
+        def configure_optimizers(self):
+            return HybridAdam(self.layer.parameters(), lr=1e-3)
+
+    model = TestModel()
+    trainer = Trainer(
+        fast_dev_run=True,
+        default_root_dir=tmpdir,
+        accelerator="gpu",
+        devices=1,
+        precision="16-mixed",
+        strategy="colossalai",
+        enable_progress_bar=False,
+        enable_model_summary=False,
+    )
+
+    with pytest.raises(TypeError, match="your LightningModule must override the `configure_sharded_model`"):
+        trainer.fit(model)
+
+
 def _assert_save_model_is_equal(model, tmpdir, trainer):
     checkpoint_path = os.path.join(tmpdir, "model.pt")
     checkpoint_path = trainer.strategy.broadcast(checkpoint_path)
