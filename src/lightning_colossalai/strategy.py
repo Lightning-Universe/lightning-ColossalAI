@@ -80,6 +80,7 @@ class ColossalAIStrategy(DDPStrategy):
             ...
             def configure_sharded_model(self) -> None:
                 self.model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
+
         trainer = Trainer(..., accelerator="gpu", precision=16, strategy="colossalai")
 
     Args:
@@ -342,6 +343,12 @@ class ColossalAIStrategy(DDPStrategy):
             if trainer.accumulate_grad_batches > 1:
                 raise ValueError(
                     "ColossalAI does not support gradient accumulation now. Please set `accumulate_grad_batches` to 1."
+                )
+
+            if not is_overridden("configure_sharded_model", trainer.lightning_module):
+                raise TypeError(
+                    "To use the ColossalAIStrategy, your LightningModule must override the `configure_sharded_model`"
+                    " and create the layers there."
                 )
 
         if not isinstance(self.precision_plugin, ColossalAIPrecisionPlugin):
