@@ -13,8 +13,13 @@
 # limitations under the License.
 
 import torch
-from lightning.pytorch.core.datamodule import LightningDataModule
+from lightning_utilities import module_available
 from torch.utils.data import DataLoader, Dataset
+
+if module_available("lightning"):
+    from lightning.pytorch.core.datamodule import LightningDataModule
+elif module_available("pytorch_lightning"):
+    from pytorch_lightning.core.datamodule import LightningDataModule
 
 
 class SklearnDataset(Dataset):
