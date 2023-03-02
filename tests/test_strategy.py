@@ -72,7 +72,6 @@ class ModelParallelBoringModelNoSchedulers(ModelParallelBoringModel):
         return HybridAdam(self.layer.parameters(), lr=1e-3)
 
 
-@pytest.mark.xfail(RuntimeError, reason="Error building extension 'fused_optim'")
 @RunIf(min_gpus=1)
 def test_gradient_clip_algorithm_error(tmpdir):
     model = ModelParallelBoringModel()
@@ -116,7 +115,6 @@ def test_colossalai_optimizer(tmpdir):
         trainer.fit(UnsupportedOptimizerModel())
 
 
-@pytest.mark.xfail(RuntimeError, reason="Error building extension 'fused_optim'")
 @RunIf(min_cuda_gpus=1, standalone=True)
 def test_warn_colossalai_ignored(tmpdir):
     class TestModel(ModelParallelBoringModel):
