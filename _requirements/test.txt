@@ -4,4 +4,5 @@ pytest>=6.0
 pytest-cov
 mypy==1.0.0
 
-scikit-learn>=1.0.0, <1.2.1
+scikit-learn >=1.0.0, <1.2.1
+torchmetrics >=0.8.0, <0.11.0
