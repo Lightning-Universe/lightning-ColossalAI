@@ -255,9 +255,8 @@ def test_multi_gpu_checkpointing(tmpdir):
     assert saved_results == results
 
 
-@pytest.mark.xfail(raises=AssertionError, match="You should run a completed iteration as your warmup iter")
 @RunIf(min_gpus=2, standalone=True)
-def test_test_without_fit(tmpdir):
+def test_run_trainer_test_without_fit(tmpdir):
     model = ModelParallelClassificationModel()
     dm = ClassifDataModule()
     trainer = Trainer(
