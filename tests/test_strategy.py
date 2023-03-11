@@ -17,11 +17,18 @@ import pytest
 import torch
 import torch.nn.functional as F  # noqa: N812
 from colossalai.nn.optimizer import HybridAdam
-from lightning.pytorch import LightningModule, Trainer, seed_everything
-from lightning.pytorch.callbacks import ModelCheckpoint
-from lightning.pytorch.demos.boring_classes import BoringModel
+from lightning_utilities.core.imports import module_available
 from torch import Tensor, nn
 from torchmetrics import Accuracy
+
+if module_available("lightning"):
+    from lightning.pytorch import LightningModule, Trainer, seed_everything
+    from lightning.pytorch.callbacks import ModelCheckpoint
+    from lightning.pytorch.demos.boring_classes import BoringModel
+elif module_available("pytorch_lightning"):
+    from pytorch_lightning import LightningModule, Trainer, seed_everything
+    from pytorch_lightning.callbacks import ModelCheckpoint
+    from pytorch_lightning.demos.boring_classes import BoringModel
 
 import lightning_colossalai.strategy
 from lightning_colossalai import ColossalAIPrecisionPlugin, ColossalAIStrategy
@@ -39,16 +46,9 @@ def test_invalid_colossalai(monkeypatch):
         ColossalAIStrategy()
 
 
-@RunIf(colossalai=True)
-def test_colossalai_strategy_with_trainer_by_instance():
-    trainer = Trainer(precision="16-mixed", strategy=ColossalAIStrategy())
-    assert isinstance(trainer.strategy, ColossalAIStrategy)
-    assert isinstance(trainer.strategy.precision_plugin, ColossalAIPrecisionPlugin)
-
-
-@RunIf(colossalai=True)
-def test_colossalai_strategy_with_trainer_by_string():
-    trainer = Trainer(precision="16-mixed", strategy="colossalai")
+@pytest.mark.parametrize("by", ("colossalai", ColossalAIStrategy()))
+def test_colossalai_strategy_with_trainer(by):
+    trainer = Trainer(precision="16-mixed", strategy=by)
     assert isinstance(trainer.strategy, ColossalAIStrategy)
     assert isinstance(trainer.strategy.precision_plugin, ColossalAIPrecisionPlugin)
 
@@ -91,7 +91,7 @@ def test_gradient_clip_algorithm_error(tmpdir):
         trainer.fit(model)
 
 
-@RunIf(min_cuda_gpus=1, standalone=True, colossalai=True)
+@RunIf(min_cuda_gpus=1, standalone=True)
 def test_colossalai_optimizer(tmpdir):
     class UnsupportedOptimizerModel(ModelParallelBoringModel):
         def configure_optimizers(self):
@@ -115,7 +115,7 @@ def test_colossalai_optimizer(tmpdir):
         trainer.fit(UnsupportedOptimizerModel())
 
 
-@RunIf(min_cuda_gpus=1, standalone=True, colossalai=True)
+@RunIf(min_cuda_gpus=1, standalone=True)
 def test_warn_colossalai_ignored(tmpdir):
     class TestModel(ModelParallelBoringModel):
         def backward(self, loss: Tensor, *args, **kwargs) -> None:
@@ -137,7 +137,7 @@ def test_warn_colossalai_ignored(tmpdir):
         trainer.fit(model)
 
 
-@RunIf(min_cuda_gpus=1, standalone=True, colossalai=True)
+@RunIf(min_cuda_gpus=1, standalone=True)
 def test_configure_sharded_model_hook_not_overridden(tmpdir):
     class TestModel(BoringModel):
         def configure_optimizers(self):
@@ -232,7 +232,7 @@ class ModelParallelClassificationModel(LightningModule):
         return self.forward(x)
 
 
-@RunIf(min_cuda_gpus=2, standalone=True, colossalai=True, sklearn=True)
+@RunIf(min_cuda_gpus=2, standalone=True)
 def test_multi_gpu_checkpointing(tmpdir):
     dm = ClassifDataModule()
     model = ModelParallelClassificationModel()
@@ -255,9 +255,8 @@ def test_multi_gpu_checkpointing(tmpdir):
     assert saved_results == results
 
 
-@pytest.mark.xfail(raises=AssertionError, match="You should run a completed iteration as your warmup iter")
 @RunIf(min_gpus=2, standalone=True)
-def test_test_without_fit(tmpdir):
+def test_run_trainer_test_without_fit(tmpdir):
     model = ModelParallelClassificationModel()
     dm = ClassifDataModule()
     trainer = Trainer(

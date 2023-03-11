@@ -51,11 +51,6 @@ function show_batched_output {
   if [ -f standalone_test_output.txt ]; then  # if exists
     cat standalone_test_output.txt
     # heuristic: stop if there's mentions of errors. this can prevent false negatives when only some of the ranks fail
-#    if grep -iE 'error|exception|traceback|failed' standalone_test_output.txt | grep -qvE 'on_exception|xfailed'; then
-#      echo "Potential error! Stopping."
-#      rm standalone_test_output.txt
-#      exit 1
-#    fi
     rm standalone_test_output.txt
   fi
 }
@@ -64,22 +59,15 @@ trap show_batched_output EXIT  # show the output on exit
 for i in "${!parametrizations_arr[@]}"; do
   parametrization=${parametrizations_arr[$i]}
 
-  # check blocklist
-  if [[ "${parametrization}" == *"test_pytorch_profiler_nested_emit_nvtx"* ]]; then
-    echo "Skipping $parametrization"
-    report+="Skipped\t$parametrization\n"
-    # do not continue the loop because we might need to wait for batched jobs
-  else
-    echo "Running $parametrization"
-    # execute the test in the background
-    # redirect to a log file that buffers test output. since the tests will run in the background, we cannot let them
-    # output to std{out,err} because the outputs would be garbled together
-    python ${defaults} "$parametrization" &>> standalone_test_output.txt &
-    # save the PID in an array
-    pids[${i}]=$!
-    # add row to the final report
-    report+="Ran\t$parametrization\n"
-  fi
+  echo "Running $parametrization"
+  # execute the test in the background
+  # redirect to a log file that buffers test output. since the tests will run in the background, we cannot let them
+  # output to std{out,err} because the outputs would be garbled together
+  python ${defaults} "$parametrization" &>> standalone_test_output.txt &
+  # save the PID in an array
+  pids[${i}]=$!
+  # add row to the final report
+  report+="Ran\t$parametrization\n"
 
   if ((($i + 1) % $test_batch_size == 0)); then
     # wait for running tests
