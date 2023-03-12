@@ -11,6 +11,7 @@ lightning ColossalAI documentation
    :caption: Start here
 
    readme
+   overview
 
 
 Indices and tables
