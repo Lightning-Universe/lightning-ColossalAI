@@ -1,4 +1,4 @@
-# Lightning + Colossal-AI
+# Lightning ⚡ Colossal-AI
 
 **Efficient Large-Scale Distributed Training with [Colossal-AI](https://colossalai.org/) and [Lightning AI](https://lightning.ai)**
 
