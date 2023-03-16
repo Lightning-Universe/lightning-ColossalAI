@@ -1,4 +1,3 @@
-# TODO: Update this once Lightning 2.0.0 is released
-lightning>=2.0.0rc0
+lightning >=2.0.0
 # note: when you bump the latest version, update also docker image for GPU testing
-colossalai>=0.2.0, <=0.2.5
+colossalai >=0.2.0, <=0.2.5
