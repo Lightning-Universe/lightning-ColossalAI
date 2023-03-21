@@ -14,7 +14,7 @@ jobs:
   check-code:
     uses: Lightning-AI/utilities/.github/workflows/check-code.yml@v0.8.0
     with:
-      actions-ref: v0.7.1
+      actions-ref: v0.8.0
 
   check-schema:
     uses: Lightning-AI/utilities/.github/workflows/check-schema.yml@v0.8.0
@@ -24,7 +24,7 @@ jobs:
   check-package:
     uses: Lightning-AI/utilities/.github/workflows/check-package.yml@v0.8.0
     with:
-      actions-ref: v0.7.1
+      actions-ref: v0.8.0
       import-name: "lightning_colossalai"
       artifact-name: dist-packages-${{ github.sha }}
       testing-matrix: |
