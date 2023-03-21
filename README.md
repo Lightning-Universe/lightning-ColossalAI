@@ -18,7 +18,7 @@ ______________________________________________________________________
 ## Installation
 
 ```bash
-pip install -U lightning lightning-colossalai
+pip install -U lightning-colossalai
 ```
 
 ## Usage
