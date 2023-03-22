@@ -17,7 +17,7 @@ import pytest
 import torch
 import torch.nn.functional as F  # noqa: N812
 from colossalai.nn.optimizer import HybridAdam
-from lightning_utilities.core.imports import module_available
+from lightning_utilities.core.imports import RequirementCache, module_available
 from torch import Tensor, nn
 from torchmetrics import Accuracy
 
@@ -34,6 +34,8 @@ import lightning_colossalai.strategy
 from lightning_colossalai import ColossalAIPrecisionPlugin, ColossalAIStrategy
 from tests import RunIf
 from tests.datamodules import ClassifDataModule
+
+_TM_GE_0_11 = RequirementCache("torchmetrics>=0.11.0")
 
 
 def test_invalid_colossalai(monkeypatch):
@@ -182,9 +184,10 @@ class ModelParallelClassificationModel(LightningModule):
         self.lr = lr
         self.layers = None
 
-        self.train_acc = Accuracy()
-        self.valid_acc = Accuracy()
-        self.test_acc = Accuracy()
+        metric = Accuracy(task="multiclass", num_classes=3) if _TM_GE_0_11 else Accuracy()
+        self.train_acc = metric.clone()
+        self.valid_acc = metric.clone()
+        self.test_acc = metric.clone()
 
     def build_layers(self) -> nn.Module:
         layers = []
