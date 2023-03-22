@@ -41,4 +41,4 @@ strategy = ColossalAIStrategy(...)
 trainer = L.Trainer(strategy=strategy, precision="16-mixed", devices=...)
 ```
 
-Find all configuration options [in the docs](https://pytorch-lightning.readthedocs.io/en/latest/advanced/third_party/colossalai.html)!
+Find all configuration options [in the docs](https://lightning.ai/docs/pytorch/latest/advanced/third_party/colossalai.html)!

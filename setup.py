@@ -73,7 +73,7 @@ setup(
     extras_require=_prepare_extras(),
     project_urls={
         "Bug Tracker": "https://github.com/Lightning-AI/lightning-colossalai/issues",
-        "Documentation": "https://lightning-colossalai.rtfd.io/en/latest/",
+        "Documentation": "https://lightning-ai.github.io/lightning-ColossalAI/",
         "Source Code": "https://github.com/Lightning-AI/lightning-colossalai",
     },
     classifiers=[

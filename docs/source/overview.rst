@@ -1,6 +1,6 @@
-###########
-Colossal-AI
-###########
+########################
+Lightning ⚡ Colossal-AI
+########################
 
 The `Colossal-AI strategy <https://github.com/Lightning-AI/lightning-colossalai>`_ implements ZeRO-DP with chunk-based memory management.
 With this chunk mechanism, really large models can be trained with a small number of GPUs.
@@ -55,8 +55,6 @@ See a full example of a benchmark with the a `GPT-2 model <https://github.com/hp
     *   Your model must be created using the :meth:`~lightning.pytorch.core.module.LightningModule.configure_sharded_model` method.
 
     *   ``ColossalaiStrategy`` doesn't support gradient accumulation as of now.
-
-.. _colossal_placement_policy:
 
 Model Definition
 ================
