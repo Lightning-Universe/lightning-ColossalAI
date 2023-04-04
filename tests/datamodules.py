@@ -87,7 +87,6 @@ class ClassifDataModule(SklearnDataModule):
     def __init__(
         self, num_features=32, length=800, num_classes=3, batch_size=10, n_clusters_per_class=1, n_informative=2
     ):
-
         from sklearn.datasets import make_classification
 
         data = make_classification(
