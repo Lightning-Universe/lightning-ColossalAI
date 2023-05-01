@@ -1,4 +1,4 @@
-sphinx>=5.0,<7.0
+sphinx>=5.0,<8.0
 myst-parser>=0.15
 nbsphinx>=0.8.5
 pandoc>=1.0
