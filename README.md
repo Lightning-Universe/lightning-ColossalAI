@@ -10,7 +10,7 @@
 
 [![General checks](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-checks.yml/badge.svg?event=push)](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-checks.yml)
 [![CI testing](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-testing.yml/badge.svg?event=push)](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-testing.yml)
-[![Build Status](https://dev.azure.com/Lightning-AI/compatibility/_apis/build/status/Lightning-AI.lightning-ColossalAI?branchName=main)](https://dev.azure.com/Lightning-AI/compatibility/_build/latest?definitionId=42&branchName=main)
+[![Build Status](https://dev.azure.com/Lightning-AI/compatibility/_apis/build/status%2Fstrategies%2FLightning-Universe.lit-strategy-ColossalAI?branchName=main)](https://dev.azure.com/Lightning-AI/compatibility/_build/latest?definitionId=59&branchName=main)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Lightning-AI/lightning-ColossalAI/main.svg)](https://results.pre-commit.ci/latest/github/Lightning-AI/lightning-ColossalAI/main)
 
 ______________________________________________________________________
