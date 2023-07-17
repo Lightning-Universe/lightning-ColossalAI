@@ -8,10 +8,10 @@
 [![PyPI Status](https://pepy.tech/badge/lightning-colossalai)](https://pepy.tech/project/lightning-colossalai)
 [![Deploy Docs](https://github.com/Lightning-AI/lightning-ColossalAI/actions/workflows/docs-deploy.yml/badge.svg)](https://lightning-ai.github.io/lightning-ColossalAI/)
 
-[![General checks](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-checks.yml/badge.svg?event=push)](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-checks.yml)
-[![CI testing](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-testing.yml/badge.svg?event=push)](https://github.com/Lightning-AI/lightning-colossalai/actions/workflows/ci-testing.yml)
-[![Build Status](https://dev.azure.com/Lightning-AI/compatibility/_apis/build/status%2Fstrategies%2FLightning-Universe.lit-strategy-ColossalAI?branchName=main)](https://dev.azure.com/Lightning-AI/compatibility/_build/latest?definitionId=59&branchName=main)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Lightning-AI/lightning-ColossalAI/main.svg)](https://results.pre-commit.ci/latest/github/Lightning-AI/lightning-ColossalAI/main)
+[![General checks](https://github.com/Lightning-Universe/lightning-ColossalAI/actions/workflows/ci-checks.yml/badge.svg?event=push)](https://github.com/Lightning-Universe/lightning-ColossalAI/actions/workflows/ci-checks.yml)
+[![CI testing](https://github.com/Lightning-Universe/lightning-ColossalAI/actions/workflows/ci-testing.yml/badge.svg?event=push)](https://github.com/Lightning-Universe/lightning-ColossalAI/actions/workflows/ci-testing.yml)
+[![Build Status](https://dev.azure.com/Lightning-AI/compatibility/_apis/build/status%2Fstrategies%2FLightning-Universe.lightning-ColossalAI?branchName=main)](https://dev.azure.com/Lightning-AI/compatibility/_build/latest?definitionId=66&branchName=main)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Lightning-Universe/lightning-ColossalAI/main.svg)](https://results.pre-commit.ci/latest/github/Lightning-Universe/lightning-ColossalAI/main)
 
 ______________________________________________________________________
 
