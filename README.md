@@ -5,7 +5,7 @@
 [![lightning](https://img.shields.io/badge/-Lightning_2.0+-792ee5?logo=pytorchlightning&logoColor=white)](https://lightning.ai/)
 [![PyPI Status](https://badge.fury.io/py/lightning-colossalai.svg)](https://badge.fury.io/py/lightning-colossalai)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lightning-colossalai)](https://pypi.org/project/lightning-colossalai/)
-[![PyPI Status](https://pepy.tech/badge/lightning-colossalai)](https://pepy.tech/project/lightning-colossalai)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/lightning-ColossalAI)](https://pepy.tech/project/lightning-colossalai)
 [![Deploy Docs](https://github.com/Lightning-AI/lightning-ColossalAI/actions/workflows/docs-deploy.yml/badge.svg)](https://lightning-ai.github.io/lightning-ColossalAI/)
 
 [![General checks](https://github.com/Lightning-Universe/lightning-ColossalAI/actions/workflows/ci-checks.yml/badge.svg?event=push)](https://github.com/Lightning-Universe/lightning-ColossalAI/actions/workflows/ci-checks.yml)
