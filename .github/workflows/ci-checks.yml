@@ -22,7 +22,7 @@ jobs:
       azure-dir: ".azure"
 
   check-package:
-    uses: Lightning-AI/utilities/.github/workflows/check-package.yml@v0.9.0
+    uses: Lightning-AI/utilities/.github/workflows/check-package.yml@v0.15.3
     with:
       actions-ref: v0.8.0
       import-name: "lightning_colossalai"
