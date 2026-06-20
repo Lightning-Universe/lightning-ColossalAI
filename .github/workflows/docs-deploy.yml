@@ -41,7 +41,7 @@ jobs:
       run: make html --jobs 2
 
     - name: Deploy 🚀
-      uses: JamesIves/github-pages-deploy-action@v4.4.3
+      uses: JamesIves/github-pages-deploy-action@v4.8.0
       if: ${{ github.event_name == 'push' }}
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
