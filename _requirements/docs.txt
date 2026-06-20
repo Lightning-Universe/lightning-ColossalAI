@@ -2,7 +2,7 @@ sphinx >=5.0,<7.0
 myst-parser >=0.15
 nbsphinx >=0.8.5
 pandoc >=1.0
-docutils>=0.16
+docutils>=0.23
 sphinxcontrib-fulltoc >=1.0
 sphinxcontrib-mockautodoc
 
